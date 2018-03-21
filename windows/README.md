@@ -1,0 +1,1 @@
+1、假设adb remount失败的话，就直接使用adb disable-verity
