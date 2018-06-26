@@ -166,6 +166,7 @@ fastboot reboot
 adb wait-for-device
 adb root
 adb wait-for-device
+adb remount
 
 
 @ping -n 5 127.0.0.1>nul
