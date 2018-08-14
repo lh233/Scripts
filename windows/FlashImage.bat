@@ -4,7 +4,7 @@
 
 
 ::路径注意增加\
-@set flashpath=Z:\DT380\LINUX\android\out\target\product\msm8953_64\
+@set flashpath=Z:\msm8909\out\target\product\msm8909\
 @set Dynamic_library_Path=Z:\msm8909\out\target\product\msm8909\obj\lib\sensors.msm8909.so
 @set Sensors_conf=Z:\DT380\LINUX\android\vendor\qcom\proprietary\sensors\dsps\reg_defaults\sensor_def_qcomdev.conf
 @set boot_image=%flashpath%boot.img
@@ -16,7 +16,7 @@
 @set recover_image=%flashpath%recovery.img
 @set cache_image=%flashpath%cache.img
 @set Dynamic_library=%Dynamic_library_Path%
-@set Dynamic_library_Board_Path=/system/lib/
+@set Dynamic_library_Board_Path=/system/lib/hw/
 
 ::初始化,下面便是判断是否有文件
 @set Image_Index=0
@@ -83,8 +83,8 @@ adb remount
 @echo 重新推进sensor........
 adb push %Dynamic_library% %Dynamic_library_Board_Path%
 adb reboot
-@echo 正在重启...... 5秒后关闭....
-@ping -n 5 127.0.0.1>nul
+@echo 正在重启...... 2秒后关闭....
+@ping -n 2 127.0.0.1>nul
 
 exit
 )
@@ -169,12 +169,12 @@ adb wait-for-device
 adb remount
 
 
-@ping -n 5 127.0.0.1>nul
+@ping -n 2 127.0.0.1>nul
 adb shell dmesg > kmesg.log
 @echo kernel log已经导出.....
 
 
 
-@echo [烧录成功，暂停5秒自动关闭]
-@ping -n 5 127.0.0.1>nul
+@echo [烧录成功，暂停2秒自动关闭]
+@ping -n 2 127.0.0.1>nul
 
