@@ -163,18 +163,33 @@ fastboot flash userdata %userdata_image%
 
 fastboot reboot
 @echo 正在重启 请稍后......
-adb wait-for-device
-adb root
-adb wait-for-device
-adb remount
+@echo 是否抓取kernel log？
+@set /p option_log=请选择:
+
+
+if "%option_log%" == "Y" (
+@echo 正在抓取kernel log...........
+
+adb wait-for-device && adb root
+adb wait-for-device && adb remount
 
 
 @ping -n 2 127.0.0.1>nul
 adb shell dmesg > kmesg.log
 @echo kernel log已经导出.....
+)
+
+if "%option_log%" == "y" (
+@echo 正在抓取kernel log...........
+
+adb wait-for-device && adb root
+adb wait-for-device && adb remount
 
 
-
+@ping -n 2 127.0.0.1>nul
+adb shell dmesg > kmesg.log
+@echo kernel log已经导出.....
+)
 @echo [烧录成功，暂停2秒自动关闭]
 @ping -n 2 127.0.0.1>nul
 
