@@ -143,7 +143,6 @@ if "%option%" == "7" (
 fastboot flash boot %boot_image%
 fastboot flash aboot %mbn_image%
 fastboot flash persist %persist_image%
-fastboot flash ramdisk %ramdisk_image%
 fastboot flash recovery %recover_image%
 fastboot flash system %system_image%
 fastboot flash cache %cache_image%
