@@ -73,7 +73,7 @@ goto LoopStart
 @set /p option=请先设置路径后，再输入要烧录的选项：
 
 
-if "%option%" == "9" (
+if "%option%" == "8" (
 adb root
 adb wait-for-device
 adb remount
