@@ -7,7 +7,9 @@ adb reboot
 adb shell ping -c 1 www.baidu.com | findstr /i "TTL" >NUL 2>NUL && goto yes
 echo "ping failed"
 pause
+goto end
 :yes
 echo "ping success"
+:end
 set /a var+=1  
 if %var% lss 5000 goto continue   
