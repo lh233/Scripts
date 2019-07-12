@@ -92,8 +92,8 @@ if __name__=='__main__':
 		wifi_connect_status()
 		ret = do_telnet()
 		if (ret == True):
-			time.sleep(1200)	
 			cameraPowerBtnPress(tcpClient, portNum)
+			time.sleep(1200)	
 		else:
 			#发送电子邮件
 			print("end")
