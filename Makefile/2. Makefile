@@ -4,7 +4,8 @@ CROSS_COMPILE = /usr/local/arm/4.3.2/bin/arm-linux-
 CC	= $(CROSS_COMPILE)gcc
  
 obj-m := key.o 
- 
+#EXTRA_CFLAGS可以给Kbuild系统添加外部系统头文件
+#KBUILD_EXTRA_SYMBOLS编译驱动指定额外的Module.symvers文件
 modules:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
  
