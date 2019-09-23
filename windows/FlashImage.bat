@@ -4,8 +4,8 @@
 
 
 ::路径注意增加\
-@set flashpath=Z:\msm8909\out\target\product\msm8909\
-@set Dynamic_library_Path=Z:\msm8909\out\target\product\msm8909\obj\lib\sensors.msm8909.so
+@set flashpath=Y:\F900_Project\out\target\product\msm8953_64\
+@set Dynamic_library_Path=Y:\N6_Project\out\target\product\msm8909\obj\lib\sensors.msm8909.so
 @set Sensors_conf=Z:\DT380\LINUX\android\vendor\qcom\proprietary\sensors\dsps\reg_defaults\sensor_def_qcomdev.conf
 @set boot_image=%flashpath%boot.img
 @set mbn_image=%flashpath%emmc_appsboot.mbn
@@ -20,14 +20,17 @@
 ::初始化,下面便是判断是否有文件
 @set Image_Index=0
 @set Image_Current-path=0
-@set Image_Length=7
+
+
+::修改image的长度，可屏蔽某些镜像
+@set Image_Length=6
 @set Image[0]-path=%boot_image%
 @set Image[1]-path=%mbn_image%
 @set Image[2]-path=%system_image%
 @set Image[3]-path=%persist_image%
 @set Image[4]-path=%recover_image%
 @set Image[5]-path=%cache_image%
-@set Image[6]-path=%Dynamic_library%
+::@set Image[6]-path=%Dynamic_library%
 ::初始化
 
 :LoopStart
@@ -87,57 +90,72 @@ exit
 )
 
 
+
+
 ::判断是否进入fastboot模式
-fastboot devices>1.txt
-set /p message=<1.txt
-del 1.txt
+::注意?那边代表设备号，需要实时检查
+fastboot devices>789456123.txt
+set /p message=<789456123.txt
+del 789456123.txt
 if not defined message (
-    echo 正处于adb mode模式.....
+	adb devices>789456123.txt && findstr "recovery" 789456123.txt && ( goto RecoveryMode ) || ( adb devices>789456123.txt && findstr "?" 789456123.txt && ( goto AdbMode ) ||  echo 没有usb，请你检查好再次运行脚本 && del 789456123.txt && pause && exit )
+	
+:RecoveryMode
+	echo 正处于recovery模式......
+	adb reboot-bootloader
+	goto delfile
+:AdbMode
+	echo 正处于adb模式.......
 	adb wait-for-device
 	adb reboot-bootloader
+:delfile	
+	del 789456123.txt
 ) else ( 
 	echo 正处于fastboot mode模式.....
 )
-
-
+  
+  
+  
 @echo.
-
+  
+  
+::正常模式的几种烧录方式
 if "%option%" == "0" (
 @echo 同时烧录emmc_appsboot.mbn和boot.img........
 fastboot flash boot %boot_image%
 fastboot flash aboot %mbn_image%
-)
-
+) 
+  
 if "%option%" == "1" (
 @echo 烧录boot.img........
 fastboot flash boot %boot_image%
-)
-
+) 
+  
 if "%option%" == "2" (
 @echo 烧录aboot.img........
 fastboot flash aboot %mbn_image%
-)
-
+) 
+  
 if "%option%" == "3" (
 @echo 烧录persist.img..........
 fastboot flash persist %persist_image%
-)
-
+) 
+  
 if "%option%" == "4" (
 @echo 烧录recovery.img...........
 fastboot flash recovery %recover_image%
-)
-
+) 
+  
 if "%option%" == "5" (
 @echo 烧录system.img........
 fastboot flash system %system_image%
-)
-
+) 
+  
 if "%option%" == "6" (
 @echo 烧录cache.img...........
 fastboot flash cache %cache_image%
-)
-
+) 
+  
 if "%option%" == "7" (
 @echo 烧录所有镜像.............
 fastboot flash boot %boot_image%
@@ -147,40 +165,39 @@ fastboot flash recovery %recover_image%
 fastboot flash system %system_image%
 fastboot flash cache %cache_image%
 fastboot flash userdata %userdata_image%
-)
-
-
-
-
+) 
+  
+  
+  
+  
 fastboot reboot
 @echo 正在重启 请稍后......
 @echo 是否抓取kernel log？
 @set /p option_log=请选择:
-
-
+  
+  
 if "%option_log%" == "Y" (
 @echo 正在抓取kernel log...........
-
+  
 adb wait-for-device && adb root
 adb wait-for-device && adb remount
-
-
+  
+  
 @ping -n 2 127.0.0.1>nul
 adb shell dmesg > kmesg.log
 @echo kernel log已经导出.....
-)
-
+) 
+  
 if "%option_log%" == "y" (
 @echo 正在抓取kernel log...........
-
+  
 adb wait-for-device && adb root
 adb wait-for-device && adb remount
-
-
+  
+  
 @ping -n 2 127.0.0.1>nul
 adb shell dmesg > kmesg.log
 @echo kernel log已经导出.....
-)
+) 
 @echo [烧录成功，暂停2秒自动关闭]
 @ping -n 2 127.0.0.1>nul
-
