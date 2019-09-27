@@ -98,7 +98,7 @@ fastboot devices>789456123.txt
 set /p message=<789456123.txt
 del 789456123.txt
 if not defined message (
-	adb devices>789456123.txt && findstr "recovery" 789456123.txt && ( goto RecoveryMode ) || ( adb devices>789456123.txt && findstr "?" 789456123.txt && ( goto AdbMode ) ||  echo 没有usb，请你检查好再次运行脚本 && del 789456123.txt && pause && exit )
+	adb devices>789456123.txt && findstr "recovery" 789456123.txt && ( goto RecoveryMode ) || ( adb devices>789456123.txt && findstr "12345678" 789456123.txt && ( goto AdbMode ) ||  echo 没有usb，请你检查好设备号或插好USB，再次运行脚本 && del 789456123.txt && pause && exit )
 	
 :RecoveryMode
 	echo 正处于recovery模式......
