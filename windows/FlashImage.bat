@@ -14,6 +14,7 @@
 @set persist_image=%flashpath%persist.img
 @set recover_image=%flashpath%recovery.img
 @set cache_image=%flashpath%cache.img
+@set splash_image=%flashpath%splash.img
 @set Dynamic_library=%Dynamic_library_Path%
 @set Dynamic_library_Board_Path=/system/lib/hw/
 
@@ -23,14 +24,15 @@
 
 
 ::修改image的长度，可屏蔽某些镜像
-@set Image_Length=6
+@set Image_Length=7
 @set Image[0]-path=%boot_image%
 @set Image[1]-path=%mbn_image%
 @set Image[2]-path=%system_image%
 @set Image[3]-path=%persist_image%
 @set Image[4]-path=%recover_image%
 @set Image[5]-path=%cache_image%
-::@set Image[6]-path=%Dynamic_library%
+@set Image[6]-path=%splash_image%
+::@set Image[7]-path=%Dynamic_library%
 ::初始化
 
 :LoopStart
@@ -69,14 +71,15 @@ goto LoopStart
 @echo 4、烧录recovery.img
 @echo 5、烧录system.img
 @echo 6、烧录cache.img
-@echo 7、烧录所有镜像
-@echo 8、重新推进sensor.so
+@echo 7、烧录splash.img
+@echo 8、烧录所有镜像
+@echo 9、重新推进sensor.so
 ::@echo 10、烧录并更新adsp架构下的sensor文件
 
 @set /p option=请先设置路径后，再输入要烧录的选项：
 
 
-if "%option%" == "8" (
+if "%option%" == "9" (
 adb root
 adb wait-for-device
 adb remount
@@ -155,8 +158,13 @@ if "%option%" == "6" (
 @echo 烧录cache.img...........
 fastboot flash cache %cache_image%
 ) 
-  
+
 if "%option%" == "7" (
+@echo 烧录splash_image...........
+fastboot flash cache %splash_image%
+) 
+  
+if "%option%" == "8" (
 @echo 烧录所有镜像.............
 fastboot flash boot %boot_image%
 fastboot flash aboot %mbn_image%
@@ -165,6 +173,7 @@ fastboot flash recovery %recover_image%
 fastboot flash system %system_image%
 fastboot flash cache %cache_image%
 fastboot flash userdata %userdata_image%
+fastboot flash splash %splash_image%
 ) 
   
   
